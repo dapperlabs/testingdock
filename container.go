@@ -504,7 +504,7 @@ func healthCheckRunning() HealthCheckFunc {
 			return err
 		}
 
-		if cjson.ContainerJSONBase.State.Running == false {
+		if !cjson.ContainerJSONBase.State.Running {
 			return fmt.Errorf("container not running")
 		}
 		return nil

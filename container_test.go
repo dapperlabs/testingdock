@@ -108,7 +108,7 @@ func TestContainer_Start(t *testing.T) {
 	s.Start(context.TODO())
 	defer func() {
 		s.Close()
-		s.Remove()
+		_ = s.Remove()
 	}()
 
 	// test stuff within the database
