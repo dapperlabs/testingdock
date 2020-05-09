@@ -241,16 +241,27 @@ func (c *Container) start(ctx context.Context) { // nolint: gocyclo
 			for scanner.Scan() { // scanner loop
 				if line := scanner.Text(); len(line) > 0 {
 					printf("(clogs ) %-25s (%s) - %s", c.Name, c.ID, line)
-
 				}
 			}
 
 			serr := scanner.Err()
-			if serr != nil && serr != io.EOF {
+			if serr != nil {
+				// exit gracefully on EOF
+				if serr == io.EOF {
+					printf("(loggi ) %-25s (%s) - %s", c.Name, c.ID, "EOF reached, stopping logging")
+					return
+				}
+
+				// exit gracefully if the context was cancelled
+				select {
+				case <-ctx.Done():
+					printf("loggi ) %-25s (%s) - %s", c.Name, c.ID, "context cancelled, stopping loggin")
+					return
+				default:
+				}
+
+				// unknown error, log as fatal
 				c.t.Fatalf("container logging failure: %s", serr.Error())
-			} else {
-				printf("(loggi ) %-25s (%s) - %s", c.Name, c.ID, "EOF reached, stopping logging")
-				return // io.EOF, stop goroutine
 			}
 		}()
 	}
