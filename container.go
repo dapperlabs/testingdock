@@ -316,7 +316,7 @@ func (c *Container) initialCleanup(ctx context.Context) {
 			if err = c.cli.ContainerRemove(ctx, cont.ID, types.ContainerRemoveOptions{
 				Force:         true,
 				RemoveVolumes: true,
-				RemoveLinks:   true,
+				RemoveLinks:   false,
 			}); err != nil {
 				c.t.Fatalf("container removal failure: %s", err.Error())
 			}
