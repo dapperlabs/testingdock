@@ -295,6 +295,7 @@ func findContainerByName(ctx context.Context, cli *client.Client, name string) (
 	containerListArgs.Add("name", name)
 	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{
 		Filters: containerListArgs,
+		All:     true, // also list stopped containers
 	})
 	if err != nil {
 		return nil, err
