@@ -295,6 +295,7 @@ func findContainerByName(ctx context.Context, cli *client.Client, name string) (
 	containerListArgs.Add("name", name)
 	containers, err := cli.ContainerList(ctx, types.ContainerListOptions{
 		Filters: containerListArgs,
+		All:     true, // also list stopped containers
 	})
 	if err != nil {
 		return nil, err
@@ -316,7 +317,7 @@ func (c *Container) initialCleanup(ctx context.Context) {
 			if err = c.cli.ContainerRemove(ctx, cont.ID, types.ContainerRemoveOptions{
 				Force:         true,
 				RemoveVolumes: true,
-				RemoveLinks:   true,
+				RemoveLinks:   false,
 			}); err != nil {
 				c.t.Fatalf("container removal failure: %s", err.Error())
 			}
