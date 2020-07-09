@@ -389,7 +389,7 @@ func (c *Container) remove() {
 		Force:         true,
 		RemoveVolumes: true,
 	}); err != nil {
-		printf(err.Error())
+		printf("(remove ) %-25s (%s) - err removing %s", c.Name, c.ID, err.Error())
 		c.t.Fatalf("container removal failure: %s", err.Error())
 	}
 	c.removed = true
